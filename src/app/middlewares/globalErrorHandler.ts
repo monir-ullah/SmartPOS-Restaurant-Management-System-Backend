@@ -22,6 +22,8 @@ const globalErrorHandler: ErrorRequestHandler = (
     message = error.message
   }
 
+  
+
   return res.status(statusCode).json({
     success: false,
     message,
