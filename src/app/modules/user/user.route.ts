@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { validateZodRequest } from '../../middlewares/validateZodRequest'
-import { useZodSchema } from './user.zod.validation'
+import { userZodSchema } from './user.zod.validation'
 import { UserController } from './user.controller'
 
 const router = Router()
@@ -8,14 +8,14 @@ const router = Router()
 // Registration route
 router.post(
   '/user/registration',
-  validateZodRequest(useZodSchema),
+  validateZodRequest(userZodSchema),
   UserController.userRegistration,
 )
 
 // Login route
 router.post(
   '/user/login',
-  validateZodRequest(useZodSchema),
+  validateZodRequest(userZodSchema),
   UserController.userLogin,
 )
 

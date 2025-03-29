@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 // User zod Schema
-export const useZodSchema = z.object({
+export const userZodSchema = z.object({
   username: z.string({
     required_error: 'username is required',
     invalid_type_error: 'username must be a string',
