@@ -10,7 +10,7 @@ type TResponse<T1> = {
     page: number
     limit: number
     total: number
-    totalPage: number
+    totalPages: number
   }
 }
 

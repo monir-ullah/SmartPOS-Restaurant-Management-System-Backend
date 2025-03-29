@@ -1,3 +1,4 @@
+import { generateId } from '../../utilities/essentials'
 import { TPaginationOptions } from '../../utilities/sendResponse'
 import { MCategory, TCategory } from './category.interface'
 
@@ -27,7 +28,14 @@ const generateNextCategoryId = async (): Promise<string> => {
 }
 // Create category in database
 const createCategoryIntoDB = async (categoryData: TCategory) => {
-  const categoryId = await generateNextCategoryId()
+  
+
+  const categoryId = await generateId({
+    model: MCategory,
+    prefix: 'cat',
+    fieldName: 'categoryId'
+  })
+
   const result = await MCategory.create({ ...categoryData, categoryId })
   return result
 }
@@ -54,14 +62,14 @@ const getAllCategoriesFromDB = async (options: TPaginationOptions) => {
 
   // Get total count for pagination
   const total = await MCategory.countDocuments({ isActive: true })
-  const totalPage = Math.ceil(total / limit)
+  const totalPages = Math.ceil(total / limit)
 
   return {
     meta: {
       page,
       limit,
       total,
-      totalPage,
+      totalPages,
     },
     data: result,
   }
