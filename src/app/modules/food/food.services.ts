@@ -83,18 +83,30 @@ const getSingleFoodItemFromDB = async (id: string) => {
 
 // Update food item
 const updateFoodItemInDB = async (id: string, payload: Partial<TFoodItem>) => {
-  const result = await MFoodItem.findByIdAndUpdate(id, payload, {
-    new: true,
-    runValidators: true,
-  })
-    .populate('category')
-    .lean()
+  
+  // First Check if the category exists
+  const isCategoryExists = await MCategory.findOne({ categoryId: payload.categoryId, isActive: true })
+
+  if (!isCategoryExists) {
+    throw new NotFoundError('Category not found. For that reason you cannot create food item.Please create a category first and try again.')
+  }
+  
+  const result = await MFoodItem.findOneAndUpdate(
+    { foodId: id }, 
+    payload, 
+    { new: true, runValidators: true }
+  ).populate({
+    path: 'categoryId',
+    localField: 'categoryId',
+    foreignField: 'categoryId',
+    select: 'categoryId name description isActive'
+  }).lean()
   return result
 }
 
 // Delete food item
 const deleteFoodItemFromDB = async (id: string) => {
-  const result = await MFoodItem.findByIdAndDelete(id)
+  const result = await MFoodItem.findOneAndUpdate({foodId: id, isActive: false})
     .populate('category')
     .lean()
   return result
