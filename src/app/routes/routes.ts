@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { userRoute } from '../modules/user/user.route'
 import { categoryRoute } from '../modules/category/category.route'
 import { foodItemRoutes } from '../modules/food/food.route'
+import { tableRoutes } from '../modules/table/table.route'
 
 const router = Router()
 
@@ -15,8 +16,10 @@ const moduleRoutes = [
   },
   {
     route: foodItemRoutes,
+  },
+  {
+    route: tableRoutes,
   }
-  
 ]
 
 // handling all routes with forEach

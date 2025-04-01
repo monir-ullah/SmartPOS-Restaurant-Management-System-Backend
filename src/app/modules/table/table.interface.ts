@@ -1,0 +1,24 @@
+export type TTableStatus = 'available' | 'occupied' | 'reserved' | 'maintenance';
+
+export type TTable = {
+  tableId: string;
+  tableNumber: number;
+  seatCapacity: number;
+  isOccupied: boolean;
+  status: TTableStatus;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type TTableFilters = {
+  searchTerm?: string;
+  tableNumber?: number;
+  seatCapacity?: number;
+  status?: TTableStatus;
+};
+
+export type TTableResponse = {
+  success: boolean;
+  message: string;
+  data: TTable | TTable[] | null;
+};
