@@ -11,10 +11,14 @@ export type TTable = {
 };
 
 export type TTableFilters = {
-  searchTerm?: string;
-  tableNumber?: number;
-  seatCapacity?: number;
-  status?: TTableStatus;
+    page?: string;
+    limit?: string;
+    sortBy?: string;
+    sortOrder?: string;
+    searchTerm?: string;
+    tableNumber?: number;
+    seatCapacity?: number;
+    status?: TTableStatus;
 };
 
 export type TTableResponse = {

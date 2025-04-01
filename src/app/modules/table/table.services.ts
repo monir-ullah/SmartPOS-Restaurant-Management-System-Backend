@@ -1,4 +1,5 @@
 import { generateId } from '../../utilities/essentials';
+import { TPaginationOptions } from '../food/food.interface';
 import { TTable, TTableFilters } from './table.interface';
 import { MTableModel } from './table.model';
 
@@ -13,8 +14,10 @@ const createTable = async (payload: Partial<TTable>) => {
   return result;
 };
 
-const getAllTables = async (filters: TTableFilters) => {
-  const { searchTerm, ...filterData } = filters;
+const getAllTables = async (filters: TTableFilters,paginationOptions: TPaginationOptions,) => {
+  const { searchTerm,  ...filterData } = filters;
+  const { page = 1, limit = 10 } = paginationOptions;
+  const skip = (page - 1) * limit;
   const conditions = [];
 
   if (searchTerm) {
@@ -35,8 +38,22 @@ const getAllTables = async (filters: TTableFilters) => {
   }
 
   const whereConditions = conditions.length > 0 ? { $and: conditions } : {};
-  const result = await MTableModel.find(whereConditions);
-  return result;
+  const result = await MTableModel.find(whereConditions)
+    .skip(skip)
+    .limit(limit)
+    .lean();
+
+  const total = await MTableModel.countDocuments(whereConditions);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+    data: result,
+  };
 };
 
 const getSingleTable = async (tableId: string) => {

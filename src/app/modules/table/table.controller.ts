@@ -21,8 +21,22 @@ const createTable = async (req: Request, res: Response) => {
 
 const getAllTables = async (req: Request, res: Response) => {
   try {
-    const filters = req.query as TTableFilters;
-    const result = await TableService.getAllTables(filters);
+    
+    const { page, limit, searchTerm,  isOccupied } = req.query
+
+    const filters = {
+        searchTerm: searchTerm as string,
+        isOccupied: isOccupied? isOccupied === 'true' : undefined,
+    }
+
+    const result = await TableService.getAllTables(filters,
+        {
+          page: Number(page),
+          limit: Number(limit),
+        }
+    );
+
+
     res.status(200).json({
       success: true,
       message: 'Tables retrieved successfully',
