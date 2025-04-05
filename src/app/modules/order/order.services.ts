@@ -11,6 +11,8 @@ import { MOrderModel } from './order.model'
 import { MFoodItem } from '../food/food.model'
 import { NotFoundError } from '../../errors/notFoundError'
 import { MTableModel } from '../table/table.model'
+import { CompletedOrderService } from '../completedOrder/completedOrder.services'
+import mongoose from 'mongoose'
 
 /**
  * Creates a new order in the system
@@ -176,7 +178,7 @@ const getSingleOrder = async (orderId: string) => {
  */
 const updateOrderStatus = async (orderId: string, status: TOrder['status']) => {
   // Validate current status and allowed transitions
-  const order = await MOrderModel.findOne({ orderId })
+  const order = await MOrderModel.findOne({ orderId }).lean()
   if (!order) {
     throw new NotFoundError('Order not found')
   }
@@ -185,7 +187,7 @@ const updateOrderStatus = async (orderId: string, status: TOrder['status']) => {
     pending: ['cooking', 'cancelled'],
     cooking: ['ready', 'cancelled'],
     ready: ['served', 'cancelled'],
-    served: [ 'pay', 'completed'],
+    served: ['pay', 'completed'],
     pay: ['completed'],
     completed: [],
     cancelled: [],
@@ -202,6 +204,52 @@ const updateOrderStatus = async (orderId: string, status: TOrder['status']) => {
       )}`
     )
   }
+
+  // If status is completed, move to completed orders and delete from orders
+  if (status === 'completed') {
+    const session = await mongoose.startSession()
+    try {
+      await session.startTransaction()
+
+      // Get the full order data with populated fields
+      const fullOrder = await MOrderModel.findOne({ orderId })
+        .lean()
+
+        
+
+      if (!fullOrder) {
+        throw new NotFoundError('Order not found')
+      }
+
+      // Ensure all required fields are present with proper validation
+      const completedOrder = {
+        orderId: fullOrder.orderId,
+        tableId: fullOrder.tableId,
+        customerName: fullOrder.customerName,
+        items: fullOrder.items,
+        totalAmount: fullOrder.totalAmount,
+        status: 'completed',
+        paymentStatus: fullOrder.paymentStatus || 'paid',
+        orderType: fullOrder.orderType || 'dine-in',
+        completedAt: new Date()
+      }
+
+      // Move to completed orders with session
+      const result = await CompletedOrderService.moveToCompletedOrders(completedOrder, session)
+
+      // Delete from orders collection
+      await MOrderModel.findOneAndDelete({ orderId }).session(session)
+
+      await session.commitTransaction()
+      return result
+    } catch (error) {
+      await session.abortTransaction()
+      throw error
+    } finally {
+      session.endSession()
+    }
+  }
+  // For other status updates
   const result = await MOrderModel.findOneAndUpdate(
     { orderId },
     { status },

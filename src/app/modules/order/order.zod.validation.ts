@@ -21,6 +21,7 @@ const updateOrderStatusZodSchema = z.object({
     'cooking',
     'ready',
     'served',
+    'pay',
     'completed',
     'cancelled',
   ]),

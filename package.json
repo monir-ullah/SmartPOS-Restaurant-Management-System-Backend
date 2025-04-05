@@ -10,7 +10,7 @@
     "lint:check": "eslint src --ignore-path .eslintignore --ext .ts",
     "lint:fix": "npx eslint src --fix",
     "prettier:check": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
-    "prettier:fix": "npx prettier --write src",
+    "format-code": "npx prettier --write src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

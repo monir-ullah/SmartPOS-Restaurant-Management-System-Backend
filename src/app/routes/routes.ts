@@ -5,6 +5,7 @@ import { foodItemRoutes } from '../modules/food/food.route'
 import { tableRoutes } from '../modules/table/table.route'
 import { ro } from 'date-fns/locale'
 import { orderRoutes } from '../modules/order/order.route'
+import { completedOrderRoutes } from '../modules/completedOrder/completedOrder.route'
 
 const router = Router()
 
@@ -24,6 +25,10 @@ const moduleRoutes = [
   },
   {
     route: orderRoutes,
+  },
+
+  {
+    route: completedOrderRoutes,
   },
 ]
 

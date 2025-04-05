@@ -12,7 +12,7 @@ router.post(
   OrderController.createOrder
 )
 
-router.get('/', OrderController.getAllOrders)
+router.get('/get-all-orders', OrderController.getAllOrders)
 
 router.get('/:orderId', OrderController.getSingleOrder)
 

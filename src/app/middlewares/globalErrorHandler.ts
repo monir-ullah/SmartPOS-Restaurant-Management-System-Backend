@@ -24,7 +24,13 @@ const globalErrorHandler: ErrorRequestHandler = (
       statusCode = httpStatus.BAD_REQUEST
       message = 'Validation Error'
       const errors = Object.values((error as any).errors || {}).map(
-        (err: any) => err.message
+        (err: any) => ({
+          message: err.message,
+          path: err.path,
+          value: err.value,
+          kind: err.kind,
+          location: err.stack // This will show where the validation failed
+        })
       )
       errorDetails = { errors }
     }
@@ -90,15 +96,15 @@ const globalErrorHandler: ErrorRequestHandler = (
     },
   }
 
-// Add stack trace and additional details in development mode
-if (process.env.NODE_ENV === 'development' && errorResponse.error) {
-  Object.assign(errorResponse.error, {
-    stack: error instanceof Error ? error.stack : undefined,
-    timestamp: new Date().toISOString(),
-    path: req.originalUrl || req.url,
-    method: req.method
-  });
-}
+  // Add stack trace and additional details in development mode
+  if (process.env.NODE_ENV === 'development' && errorResponse.error) {
+    Object.assign(errorResponse.error, {
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString(),
+      path: req.originalUrl || req.url,
+      method: req.method,
+    })
+  }
 
   return res.status(statusCode).json(errorResponse)
 }

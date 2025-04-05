@@ -15,6 +15,11 @@ const orderItemSchema = new Schema<TOrderItem>(
           `${props.value} is not a valid category ID. It must be in the format food-XXX where X is at least 3 digits`,
       },
     },
+    name: {
+      type: String,
+      required: true,
+      min: 1,
+    },
     quantity: {
       type: Number,
       required: true,
@@ -66,7 +71,7 @@ const orderSchema = new Schema<TOrder>(
     },
     status: {
       type: String,
-      enum: ['pending', 'cooking', 'ready', 'served', 'completed', 'cancelled'],
+      enum: ['pending', 'cooking', 'ready', 'served', 'completed','pay', 'cancelled'],
       default: 'pending',
     },
     paymentStatus: {
