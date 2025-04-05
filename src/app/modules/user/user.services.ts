@@ -25,7 +25,7 @@ const loginUserFromDB = async (userRegistrationBody: TUser) => {
   })
   if (!userRegistrationIntoDB) {
     throw new IncorrectUsernamePassword(
-      `incorrect username: '${usernameForDB}'  and password: '${password}  `,
+      `incorrect username: '${usernameForDB}'  and password: '${password}  `
     )
   }
 

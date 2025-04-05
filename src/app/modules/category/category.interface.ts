@@ -1,7 +1,5 @@
 import { Schema, model } from 'mongoose'
 
-
-
 // TCategory Type
 export type TCategory = {
   categoryId: string
@@ -18,11 +16,12 @@ const categorySchema = new Schema<TCategory>(
       required: true,
       unique: true,
       validate: {
-        validator: function(v: string) {
-          return /^cat-\d{3,}$/.test(v);
+        validator: function (v: string) {
+          return /^cat-\d{3,}$/.test(v)
         },
-        message: props => `${props.value} is not a valid category ID. It must be in the format cat-XXX where X is at least 3 digits`
-      }
+        message: props =>
+          `${props.value} is not a valid category ID. It must be in the format cat-XXX where X is at least 3 digits`,
+      },
     },
     name: {
       type: String,
@@ -37,7 +36,7 @@ const categorySchema = new Schema<TCategory>(
       default: true,
     },
   },
-  { versionKey: false },
+  { versionKey: false }
 )
 
 // Category Model

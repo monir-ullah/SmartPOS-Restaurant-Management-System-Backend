@@ -9,14 +9,14 @@ const router = Router()
 router.post(
   '/user/registration',
   validateZodRequest(userZodSchema),
-  UserController.userRegistration,
+  UserController.userRegistration
 )
 
 // Login route
 router.post(
   '/user/login',
   validateZodRequest(userZodSchema),
-  UserController.userLogin,
+  UserController.userLogin
 )
 
 export const userRoute = router

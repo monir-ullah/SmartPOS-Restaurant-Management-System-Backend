@@ -18,7 +18,8 @@ const createFoodItem = catchAsyncFunc(async (req, res) => {
 
 // Get all food items function
 const getAllFoodItems = catchAsyncFunc(async (req, res) => {
-  const { page, limit, searchTerm, category, minPrice, maxPrice, isAvailable } = req.query
+  const { page, limit, searchTerm, category, minPrice, maxPrice, isAvailable } =
+    req.query
 
   const filters = {
     searchTerm: searchTerm as string,
@@ -28,13 +29,10 @@ const getAllFoodItems = catchAsyncFunc(async (req, res) => {
     isAvailable: isAvailable ? isAvailable === 'true' : undefined,
   }
 
-  const result = await FoodItemServices.getAllFoodItemsFromDB(
-    filters,
-    {
-      page: Number(page),
-      limit: Number(limit),
-    },
-  )
+  const result = await FoodItemServices.getAllFoodItemsFromDB(filters, {
+    page: Number(page),
+    limit: Number(limit),
+  })
 
   if (!result.data || result.data.length === 0) {
     return sendResponse(res, {
@@ -50,10 +48,8 @@ const getAllFoodItems = catchAsyncFunc(async (req, res) => {
     statusCode: httpStatus.OK,
     message: 'Food items retrieved successfully',
     data: result.data,
-    meta: result.meta ,
+    meta: result.meta,
   })
-
-  
 })
 
 // Get single food item function

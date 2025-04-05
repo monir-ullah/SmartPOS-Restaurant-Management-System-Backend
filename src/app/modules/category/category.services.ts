@@ -28,12 +28,10 @@ const generateNextCategoryId = async (): Promise<string> => {
 }
 // Create category in database
 const createCategoryIntoDB = async (categoryData: TCategory) => {
-  
-
   const categoryId = await generateId({
     model: MCategory,
     prefix: 'cat',
-    fieldName: 'categoryId'
+    fieldName: 'categoryId',
   })
 
   const result = await MCategory.create({ ...categoryData, categoryId })

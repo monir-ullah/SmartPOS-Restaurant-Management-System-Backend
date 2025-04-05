@@ -23,7 +23,6 @@ app.use(bodyParser.json())
 //   }),
 // )
 
-
 // Handling cors issue
 app.use(
   cors({
@@ -31,7 +30,7 @@ app.use(
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204,
-  }),
+  })
 )
 
 //app route

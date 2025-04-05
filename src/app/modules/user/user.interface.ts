@@ -22,13 +22,20 @@ const userSchema = new Schema<TUser>(
     role: {
       type: String,
       enum: {
-        values: ['owner', 'manager', 'waiter', 'cashier', 'chef', 'administrator'],
+        values: [
+          'owner',
+          'manager',
+          'waiter',
+          'cashier',
+          'chef',
+          'administrator',
+        ],
         message: 'enum validator failed for path `{PATH} with value `{VALUE}`',
       },
       default: 'administrator',
     },
   },
-  { versionKey: false },
+  { versionKey: false }
 )
 
 // User Model

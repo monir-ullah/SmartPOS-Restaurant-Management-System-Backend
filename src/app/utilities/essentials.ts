@@ -19,9 +19,13 @@ export const dateObject: {
   range: 'date',
 }
 
-
-export const generateId = async ({ model, prefix, fieldName }: TOptions): Promise<string> => {
-  const lastDocument = await model.findOne({}, { [fieldName]: 1 })
+export const generateId = async ({
+  model,
+  prefix,
+  fieldName,
+}: TOptions): Promise<string> => {
+  const lastDocument = await model
+    .findOne({}, { [fieldName]: 1 })
     .sort({ [fieldName]: -1 })
     .lean()
 
@@ -43,4 +47,3 @@ export const generateId = async ({ model, prefix, fieldName }: TOptions): Promis
 
   return `${prefix}-${numberPart}`
 }
-

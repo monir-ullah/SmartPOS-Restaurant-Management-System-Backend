@@ -10,5 +10,7 @@ export const userZodSchema = z.object({
     required_error: 'password is required',
     invalid_type_error: 'password must be a string',
   }),
-  role: z.enum(['owner', 'manager', 'waiter', 'cashier', 'chef', 'administrator']).default('administrator'),
+  role: z
+    .enum(['owner', 'manager', 'waiter', 'cashier', 'chef', 'administrator'])
+    .default('administrator'),
 })

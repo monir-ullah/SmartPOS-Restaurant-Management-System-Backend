@@ -1,5 +1,5 @@
-import { Schema, model } from 'mongoose';
-import { TTable } from './table.interface';
+import { Schema, model } from 'mongoose'
+import { TTable } from './table.interface'
 
 const tableSchema = new Schema<TTable>(
   {
@@ -29,7 +29,7 @@ const tableSchema = new Schema<TTable>(
   },
   {
     timestamps: true,
-  },
-);
+  }
+)
 
-export const MTableModel = model<TTable>('Table', tableSchema);
+export const MTableModel = model<TTable>('Table', tableSchema)

@@ -46,7 +46,7 @@ const foodItemSchema = new Schema<TFoodItem>(
   },
   {
     timestamps: true,
-  },
+  }
 )
 
 export const MFoodItem = model<TFoodItem>('FoodItem', foodItemSchema)
