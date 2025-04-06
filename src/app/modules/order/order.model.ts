@@ -71,7 +71,15 @@ const orderSchema = new Schema<TOrder>(
     },
     status: {
       type: String,
-      enum: ['pending', 'cooking', 'ready', 'served', 'completed','pay', 'cancelled'],
+      enum: [
+        'pending',
+        'cooking',
+        'ready',
+        'served',
+        'completed',
+        'pay',
+        'cancelled',
+      ],
       default: 'pending',
     },
     paymentStatus: {

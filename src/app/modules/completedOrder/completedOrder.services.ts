@@ -22,7 +22,10 @@ import { NotFoundError } from '../../errors/notFoundError'
 /**
  * Moves a completed order from the order collection to completed orders
  */
-const moveToCompletedOrders = async (order: TCompletedOrder, session: ClientSession) => {
+const moveToCompletedOrders = async (
+  order: TCompletedOrder,
+  session: ClientSession
+) => {
   // Pass the order as an array when using session
   const result = await MCompletedOrder.create([order], { session })
   return result[0] // Return the first (and only) created document
@@ -48,7 +51,6 @@ const getCompletedOrders = async (
   const skip = (page - 1) * limit
   const conditions = []
 
-  
   // Build search conditions
   if (searchTerm) {
     conditions.push({
@@ -83,7 +85,6 @@ const getCompletedOrders = async (
     })
   }
 
-  
   // Execute query with conditions
   const whereConditions = conditions.length > 0 ? { $and: conditions } : {}
 

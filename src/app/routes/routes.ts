@@ -6,8 +6,6 @@ import { tableRoutes } from '../modules/table/table.route'
 import { orderRoutes } from '../modules/order/order.route'
 import { completedOrderRoutes } from '../modules/completedOrder/completedOrder.route'
 
-
-
 const router = Router()
 
 // all routes
@@ -30,7 +28,6 @@ const moduleRoutes = [
   {
     route: completedOrderRoutes,
   },
-  
 ]
 
 // handling all routes with forEach

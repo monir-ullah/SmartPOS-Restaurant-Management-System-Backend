@@ -212,10 +212,7 @@ const updateOrderStatus = async (orderId: string, status: TOrder['status']) => {
       await session.startTransaction()
 
       // Get the full order data with populated fields
-      const fullOrder = await MOrderModel.findOne({ orderId })
-        .lean()
-
-        
+      const fullOrder = await MOrderModel.findOne({ orderId }).lean()
 
       if (!fullOrder) {
         throw new NotFoundError('Order not found')
@@ -231,11 +228,14 @@ const updateOrderStatus = async (orderId: string, status: TOrder['status']) => {
         status: 'completed',
         paymentStatus: fullOrder.paymentStatus || 'paid',
         orderType: fullOrder.orderType || 'dine-in',
-        completedAt: new Date()
+        completedAt: new Date(),
       }
 
       // Move to completed orders with session
-      const result = await CompletedOrderService.moveToCompletedOrders(completedOrder, session)
+      const result = await CompletedOrderService.moveToCompletedOrders(
+        completedOrder,
+        session
+      )
 
       // Delete from orders collection
       await MOrderModel.findOneAndDelete({ orderId }).session(session)

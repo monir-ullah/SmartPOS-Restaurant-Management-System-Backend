@@ -29,7 +29,7 @@ const globalErrorHandler: ErrorRequestHandler = (
           path: err.path,
           value: err.value,
           kind: err.kind,
-          location: err.stack // This will show where the validation failed
+          location: err.stack, // This will show where the validation failed
         })
       )
       errorDetails = { errors }
