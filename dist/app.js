@@ -14,9 +14,18 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use(body_parser_1.default.json());
+// // Handling cors issue
+// app.use(
+//   cors({
+//     origin: 'https://fullstack-client-side.vercel.app',
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//     credentials: true,
+//     optionsSuccessStatus: 204,
+//   }),
+// )
 // Handling cors issue
 app.use((0, cors_1.default)({
-    origin: 'https://fullstack-client-side.vercel.app',
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204,
@@ -24,7 +33,7 @@ app.use((0, cors_1.default)({
 //app route
 app.use('/', routes_1.mainRoutes);
 app.get('/', (req, res) => {
-    res.json('Assignment-5: Smartphone Management System');
+    res.json('SmartPOS: Restaurant Management System Backend Server is running');
 });
 // global error handler
 app.use(globalErrorHandler_1.default);

@@ -16,10 +16,17 @@ const userSchema = new mongoose_1.Schema({
     role: {
         type: String,
         enum: {
-            values: ['admin', 'user'],
-            message: 'enum validator  failed for path `{PATH} with value `{VALUE}`',
+            values: [
+                'owner',
+                'manager',
+                'waiter',
+                'cashier',
+                'chef',
+                'administrator',
+            ],
+            message: 'enum validator failed for path `{PATH} with value `{VALUE}`',
         },
-        default: 'admin',
+        default: 'administrator',
     },
 }, { versionKey: false });
 // User Model

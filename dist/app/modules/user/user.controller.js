@@ -26,7 +26,7 @@ const userLogin = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) => {
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.CREATED,
-        message: 'User Register Successfully',
+        message: 'User Login Successfully',
         data: registrationResult,
     });
 });

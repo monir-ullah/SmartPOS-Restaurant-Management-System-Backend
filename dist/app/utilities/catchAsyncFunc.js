@@ -4,7 +4,7 @@ exports.catchAsyncFunc = void 0;
 // handling try catch with this function
 const catchAsyncFunc = (functionAsParameter) => {
     return (req, res, next) => {
-        Promise.resolve(functionAsParameter(req, res, next)).catch((error) => next(error));
+        Promise.resolve(functionAsParameter(req, res, next)).catch(error => next(error));
     };
 };
 exports.catchAsyncFunc = catchAsyncFunc;
