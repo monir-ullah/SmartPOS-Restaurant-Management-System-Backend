@@ -15,6 +15,7 @@ const getCompletedOrders = catchAsyncFunc(
       page: Number(req.query.page) || 1,
       limit: Number(req.query.limit) || 10,
     }
+    
 
     const result = await CompletedOrderService.getCompletedOrders(
       filters,

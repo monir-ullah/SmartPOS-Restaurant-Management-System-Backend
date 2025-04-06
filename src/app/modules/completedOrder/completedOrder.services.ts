@@ -48,7 +48,7 @@ const getCompletedOrders = async (
   const skip = (page - 1) * limit
   const conditions = []
 
-  console.log("Here")
+  
   // Build search conditions
   if (searchTerm) {
     conditions.push({
