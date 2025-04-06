@@ -31,6 +31,20 @@ export type TIncomeReport = {
   totalIncome: number
   orderCount: number
   averageOrderValue: number
+  orders: Array<{
+    orderId: string
+    customerName: string
+    items: Array<{
+      foodId: string
+      name: string
+      quantity: number
+      price: number
+      specialInstructions?: string
+    }>
+    totalAmount: number
+    orderType: 'dine-in' | 'takeaway'
+    completedAt: Date
+  }>
   period?: {
     start: Date
     end: Date

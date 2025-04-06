@@ -3,6 +3,7 @@ import express from 'express'
 import { OrderController } from './order.controller'
 import { OrderValidation } from './order.zod.validation'
 import { validateZodRequest } from '../../middlewares/validateZodRequest'
+import { CompletedOrderController } from '../completedOrder/completedOrder.controller'
 
 const router = express.Router()
 

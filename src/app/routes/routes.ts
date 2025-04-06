@@ -8,29 +8,41 @@ import { completedOrderRoutes } from '../modules/completedOrder/completedOrder.r
 
 const router = Router()
 
-// all routes
-const moduleRoutes = [
+// Auth related routes
+const authRoutes = [
   {
     route: userRoute,
   },
+]
+
+// Non-auth routes
+const applicationRoutes = [
   {
+    path: '/api/v1/category',
     route: categoryRoute,
   },
   {
+    path: '/api/v1/foods',
     route: foodItemRoutes,
   },
   {
+    path: '/api/v1/tables',
     route: tableRoutes,
   },
   {
+    path: '/api/v1/orders',
     route: orderRoutes,
   },
   {
+    path: '/api/v1/completed-orders',
     route: completedOrderRoutes,
   },
 ]
 
-// handling all routes with forEach
-moduleRoutes.forEach(route => router.use('/api/v1/auth', route.route))
+// Register auth routes
+authRoutes.forEach(route => router.use('/api/v1/auth', route.route))
+
+// Register application routes
+applicationRoutes.forEach(route => router.use(route.path, route.route))
 
 export const mainRoutes = router

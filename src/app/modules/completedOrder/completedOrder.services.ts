@@ -93,6 +93,10 @@ const getCompletedOrders = async (
     .limit(limit)
     .lean()
 
+  if (result.length === 0) {
+    throw new NotFoundError('Completed orders not found')
+  }
+
   const total = await MCompletedOrder.countDocuments(whereConditions)
 
   return {
@@ -116,24 +120,65 @@ const getIncomeReport = async (
   const result = await MCompletedOrder.aggregate([
     {
       $match: {
-        completedAt: { $gte: startDate, $lte: endDate },
+        completedAt: {
+          $gte: new Date(startDate),
+          $lte: new Date(endDate),
+        },
         paymentStatus: 'paid',
       },
     },
     {
-      $group: {
-        _id: null,
-        totalIncome: { $sum: '$totalAmount' },
-        orderCount: { $sum: 1 },
-        averageOrderValue: { $avg: '$totalAmount' },
+      $facet: {
+        summary: [
+          {
+            $group: {
+              _id: null,
+              totalIncome: {
+                $sum: { $toDouble: '$totalAmount' },
+              },
+              orderCount: { $sum: 1 },
+              averageOrderValue: {
+                $avg: { $toDouble: '$totalAmount' },
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              totalIncome: { $round: ['$totalIncome', 2] },
+              orderCount: 1,
+              averageOrderValue: { $round: ['$averageOrderValue', 2] },
+            },
+          },
+        ],
+        orders: [
+          {
+            $project: {
+              _id: 0,
+              orderId: 1,
+              customerName: 1,
+              items: 1,
+              totalAmount: 1,
+              orderType: 1,
+              completedAt: 1,
+            },
+          },
+          { $sort: { completedAt: -1 } },
+        ],
       },
     },
   ])
 
+  // Return default values if no results
+  const summary = result[0]?.summary[0] || {
+    totalIncome: 0,
+    orderCount: 0,
+    averageOrderValue: 0,
+  }
+
   return {
-    totalIncome: result[0]?.totalIncome || 0,
-    orderCount: result[0]?.orderCount || 0,
-    averageOrderValue: result[0]?.averageOrderValue || 0,
+    ...summary,
+    orders: result[0]?.orders || [],
     period: { start: startDate, end: endDate },
   }
 }

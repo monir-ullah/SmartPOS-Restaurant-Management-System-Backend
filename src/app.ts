@@ -3,6 +3,7 @@ import cors from 'cors'
 import { mainRoutes } from './app/routes/routes'
 import globalErrorHandler from './app/middlewares/globalErrorHandler'
 import bodyParser from 'body-parser'
+import { CompletedOrderController } from './app/modules/completedOrder/completedOrder.controller'
 
 // import globalErrorHandler from './app/middlewares/globalErrorHandler'
 
