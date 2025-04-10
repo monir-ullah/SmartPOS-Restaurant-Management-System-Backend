@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CompletedOrderService = void 0;
 const date_fns_1 = require("date-fns");
 const completedOrder_model_1 = require("./completedOrder.model");
+const notFoundError_1 = require("../../errors/notFoundError");
 /**
  * Moves a completed order from the order collection to completed orders
  */
@@ -69,6 +70,9 @@ const getCompletedOrders = async (filters, paginationOptions) => {
         .skip(skip)
         .limit(limit)
         .lean();
+    if (result.length === 0) {
+        throw new notFoundError_1.NotFoundError('Completed orders not found');
+    }
     const total = await completedOrder_model_1.MCompletedOrder.countDocuments(whereConditions);
     return {
         meta: {
@@ -84,29 +88,65 @@ const getCompletedOrders = async (filters, paginationOptions) => {
  * Calculates income report for a specific date range
  */
 const getIncomeReport = async (startDate, endDate) => {
-    var _a, _b, _c;
+    var _a, _b;
     const result = await completedOrder_model_1.MCompletedOrder.aggregate([
         {
             $match: {
-                completedAt: { $gte: startDate, $lte: endDate },
+                completedAt: {
+                    $gte: new Date(startDate),
+                    $lte: new Date(endDate),
+                },
                 paymentStatus: 'paid',
             },
         },
         {
-            $group: {
-                _id: null,
-                totalIncome: { $sum: '$totalAmount' },
-                orderCount: { $sum: 1 },
-                averageOrderValue: { $avg: '$totalAmount' },
+            $facet: {
+                summary: [
+                    {
+                        $group: {
+                            _id: null,
+                            totalIncome: {
+                                $sum: { $toDouble: '$totalAmount' },
+                            },
+                            orderCount: { $sum: 1 },
+                            averageOrderValue: {
+                                $avg: { $toDouble: '$totalAmount' },
+                            },
+                        },
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            totalIncome: { $round: ['$totalIncome', 2] },
+                            orderCount: 1,
+                            averageOrderValue: { $round: ['$averageOrderValue', 2] },
+                        },
+                    },
+                ],
+                orders: [
+                    {
+                        $project: {
+                            _id: 0,
+                            orderId: 1,
+                            customerName: 1,
+                            items: 1,
+                            totalAmount: 1,
+                            orderType: 1,
+                            completedAt: 1,
+                        },
+                    },
+                    { $sort: { completedAt: -1 } },
+                ],
             },
         },
     ]);
-    return {
-        totalIncome: ((_a = result[0]) === null || _a === void 0 ? void 0 : _a.totalIncome) || 0,
-        orderCount: ((_b = result[0]) === null || _b === void 0 ? void 0 : _b.orderCount) || 0,
-        averageOrderValue: ((_c = result[0]) === null || _c === void 0 ? void 0 : _c.averageOrderValue) || 0,
-        period: { start: startDate, end: endDate },
+    // Return default values if no results
+    const summary = ((_a = result[0]) === null || _a === void 0 ? void 0 : _a.summary[0]) || {
+        totalIncome: 0,
+        orderCount: 0,
+        averageOrderValue: 0,
     };
+    return Object.assign(Object.assign({}, summary), { orders: ((_b = result[0]) === null || _b === void 0 ? void 0 : _b.orders) || [], period: { start: startDate, end: endDate } });
 };
 /**
  * Gets daily income report

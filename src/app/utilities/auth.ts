@@ -5,6 +5,7 @@ import { AppError } from '../errors/AppError'
 import httpStatus from 'http-status'
 import { catchAsyncFunc } from '../utilities/catchAsyncFunc'
 import { MUser } from '../modules/user/user.interface'
+import { USER_ROLE } from '../constants/userRole'
 
 export const auth = (...userRoles: string[]) => {
   return catchAsyncFunc(
@@ -34,8 +35,14 @@ export const auth = (...userRoles: string[]) => {
       }
 
       // Check role authorization
-      if (userRoles && !userRoles.includes(role)) {
-        throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized for this action!')
+      // Example usage in auth middleware
+      if (userRoles && !userRoles.includes(role as keyof typeof USER_ROLE)) {
+        throw new AppError(
+          httpStatus.FORBIDDEN,
+          `You are not authorized for this action! . Allowed roles for this operation: ${userRoles.join(
+            ', '
+          )}. Your role: ${role}`
+        )
       }
 
       // Add user info to request
