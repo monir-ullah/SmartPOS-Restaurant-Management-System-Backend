@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FoodItemServices = void 0;
 const food_model_1 = require("./food.model");
@@ -6,9 +15,9 @@ const essentials_1 = require("../../utilities/essentials");
 const notFoundError_1 = require("../../errors/notFoundError");
 const category_interface_1 = require("../category/category.interface");
 // Create food item
-const createFoodItemIntoDB = async (payload) => {
+const createFoodItemIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // First Check if the category exists
-    const isCategoryExists = await category_interface_1.MCategory.findOne({
+    const isCategoryExists = yield category_interface_1.MCategory.findOne({
         categoryId: payload.categoryId,
         isActive: true,
     });
@@ -16,16 +25,16 @@ const createFoodItemIntoDB = async (payload) => {
         throw new notFoundError_1.NotFoundError('Category not found. For that reason you cannot create food item.Please create a category first and try again.');
     }
     // In your createFoodItemIntoDB function
-    const foodId = await (0, essentials_1.generateId)({
+    const foodId = yield (0, essentials_1.generateId)({
         model: food_model_1.MFoodItem,
         prefix: 'food',
         fieldName: 'foodId',
     });
-    const result = await food_model_1.MFoodItem.create(Object.assign(Object.assign({}, payload), { foodId }));
+    const result = yield food_model_1.MFoodItem.create(Object.assign(Object.assign({}, payload), { foodId }));
     return result;
-};
+});
 // Get all food items with filters and pagination
-const getAllFoodItemsFromDB = async (filters, paginationOptions) => {
+const getAllFoodItemsFromDB = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
     const { searchTerm, categoryId, minPrice, maxPrice, isAvailable } = filters;
     const { page = 1, limit = 10 } = paginationOptions;
     const skip = (page - 1) * limit;
@@ -46,8 +55,8 @@ const getAllFoodItemsFromDB = async (filters, paginationOptions) => {
     if (isAvailable !== undefined) {
         query.isAvailable = isAvailable;
     }
-    const result = await food_model_1.MFoodItem.find(query).skip(skip).limit(limit).lean();
-    const total = await food_model_1.MFoodItem.countDocuments(query);
+    const result = yield food_model_1.MFoodItem.find(query).skip(skip).limit(limit).lean();
+    const total = yield food_model_1.MFoodItem.countDocuments(query);
     return {
         meta: {
             page: page ? page : 1,
@@ -57,23 +66,23 @@ const getAllFoodItemsFromDB = async (filters, paginationOptions) => {
         },
         data: result,
     };
-};
+});
 // Get single food item
-const getSingleFoodItemFromDB = async (id) => {
-    const result = await food_model_1.MFoodItem.findById(id).populate('category').lean();
+const getSingleFoodItemFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield food_model_1.MFoodItem.findById(id).populate('category').lean();
     return result;
-};
+});
 // Update food item
-const updateFoodItemInDB = async (id, payload) => {
+const updateFoodItemInDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     // First Check if the category exists
-    const isCategoryExists = await category_interface_1.MCategory.findOne({
+    const isCategoryExists = yield category_interface_1.MCategory.findOne({
         categoryId: payload.categoryId,
         isActive: true,
     });
     if (!isCategoryExists) {
         throw new notFoundError_1.NotFoundError('Category not found. For that reason you cannot create food item.Please create a category first and try again.');
     }
-    const result = await food_model_1.MFoodItem.findOneAndUpdate({ foodId: id }, payload, {
+    const result = yield food_model_1.MFoodItem.findOneAndUpdate({ foodId: id }, payload, {
         new: true,
         runValidators: true,
     })
@@ -85,17 +94,17 @@ const updateFoodItemInDB = async (id, payload) => {
     })
         .lean();
     return result;
-};
+});
 // Delete food item
-const deleteFoodItemFromDB = async (id) => {
-    const result = await food_model_1.MFoodItem.findOneAndUpdate({
+const deleteFoodItemFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield food_model_1.MFoodItem.findOneAndUpdate({
         foodId: id,
         isActive: false,
     })
         .populate('category')
         .lean();
     return result;
-};
+});
 exports.FoodItemServices = {
     createFoodItemIntoDB,
     getAllFoodItemsFromDB,

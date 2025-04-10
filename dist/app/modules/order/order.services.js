@@ -4,6 +4,15 @@
  * Handles all business logic related to restaurant orders including creation,
  * retrieval, status updates, and deletion.
  */
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __rest = (this && this.__rest) || function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -34,12 +43,12 @@ const mongoose_1 = __importDefault(require("mongoose"));
  * @throws Error if order contains no items
  * @returns Created order document
  */
-const createOrder = async (payload) => {
+const createOrder = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // Validate table availability
     if (!payload.tableId) {
         throw new notFoundError_1.NotFoundError('Please Select a table is not found.');
     }
-    const isTableExist = await table_model_1.MTableModel.findOne({
+    const isTableExist = yield table_model_1.MTableModel.findOne({
         tableId: payload.tableId,
     });
     if (!isTableExist) {
@@ -48,7 +57,7 @@ const createOrder = async (payload) => {
     // Validate and process order items
     if (payload.items && payload.items.length > 0) {
         for (const item of payload.items) {
-            const foodItem = await food_model_1.MFoodItem.findOne({
+            const foodItem = yield food_model_1.MFoodItem.findOne({
                 foodId: item.foodId,
                 name: item.name,
                 isAvailable: true,
@@ -65,7 +74,7 @@ const createOrder = async (payload) => {
         throw new Error('Order must contain at least one food item');
     }
     // Generate unique order ID
-    const orderId = await (0, essentials_1.generateId)({
+    const orderId = yield (0, essentials_1.generateId)({
         model: order_model_1.MOrderModel,
         prefix: 'order',
         fieldName: 'orderId',
@@ -73,17 +82,17 @@ const createOrder = async (payload) => {
     // Calculate total order amount
     const totalAmount = payload.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
     // Create and return the new order
-    const result = await order_model_1.MOrderModel.create(Object.assign(Object.assign({}, payload), { orderId,
+    const result = yield order_model_1.MOrderModel.create(Object.assign(Object.assign({}, payload), { orderId,
         totalAmount }));
     return result;
-};
+});
 /**
  * Retrieves orders based on filters and pagination options
  * @param filters - Search and filter criteria for orders
  * @param paginationOptions - Page number and limit for pagination
  * @returns Paginated list of orders with metadata
  */
-const getAllOrders = async (filters, paginationOptions) => {
+const getAllOrders = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
     const { searchTerm, tableId, status, paymentStatus, orderType, startDate, endDate } = filters, filterData = __rest(filters, ["searchTerm", "tableId", "status", "paymentStatus", "orderType", "startDate", "endDate"]);
     const { page = 1, limit = 10 } = paginationOptions;
     const skip = (page - 1) * limit;
@@ -125,12 +134,12 @@ const getAllOrders = async (filters, paginationOptions) => {
     }
     // Execute query with conditions
     const whereConditions = conditions.length > 0 ? { $and: conditions } : {};
-    const result = await order_model_1.MOrderModel.find(whereConditions)
+    const result = yield order_model_1.MOrderModel.find(whereConditions)
         .populate('items.foodId')
         .skip(skip)
         .limit(limit)
         .lean();
-    const total = await order_model_1.MOrderModel.countDocuments(whereConditions);
+    const total = yield order_model_1.MOrderModel.countDocuments(whereConditions);
     return {
         meta: {
             page,
@@ -140,25 +149,25 @@ const getAllOrders = async (filters, paginationOptions) => {
         },
         data: result,
     };
-};
+});
 /**
  * Retrieves a single order by its ID
  * @param orderId - Unique identifier of the order
  * @returns Order document with populated food items
  */
-const getSingleOrder = async (orderId) => {
-    const result = await order_model_1.MOrderModel.findOne({ orderId }).populate('items.foodId');
+const getSingleOrder = (orderId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield order_model_1.MOrderModel.findOne({ orderId }).populate('items.foodId');
     return result;
-};
+});
 /**
  * Updates the status of an order
  * @param orderId - Unique identifier of the order
  * @param status - New status to be set
  * @returns Updated order document
  */
-const updateOrderStatus = async (orderId, status) => {
+const updateOrderStatus = (orderId, status) => __awaiter(void 0, void 0, void 0, function* () {
     // Validate current status and allowed transitions
-    const order = await order_model_1.MOrderModel.findOne({ orderId }).lean();
+    const order = yield order_model_1.MOrderModel.findOne({ orderId }).lean();
     if (!order) {
         throw new notFoundError_1.NotFoundError('Order not found');
     }
@@ -178,11 +187,11 @@ const updateOrderStatus = async (orderId, status) => {
     }
     // If status is completed, move to completed orders and delete from orders
     if (status === 'completed') {
-        const session = await mongoose_1.default.startSession();
+        const session = yield mongoose_1.default.startSession();
         try {
-            await session.startTransaction();
+            yield session.startTransaction();
             // Get the full order data with populated fields
-            const fullOrder = await order_model_1.MOrderModel.findOne({ orderId }).lean();
+            const fullOrder = yield order_model_1.MOrderModel.findOne({ orderId }).lean();
             if (!fullOrder) {
                 throw new notFoundError_1.NotFoundError('Order not found');
             }
@@ -199,14 +208,14 @@ const updateOrderStatus = async (orderId, status) => {
                 completedAt: new Date(),
             };
             // Move to completed orders with session
-            const result = await completedOrder_services_1.CompletedOrderService.moveToCompletedOrders(completedOrder, session);
+            const result = yield completedOrder_services_1.CompletedOrderService.moveToCompletedOrders(completedOrder, session);
             // Delete from orders collection
-            await order_model_1.MOrderModel.findOneAndDelete({ orderId }).session(session);
-            await session.commitTransaction();
+            yield order_model_1.MOrderModel.findOneAndDelete({ orderId }).session(session);
+            yield session.commitTransaction();
             return result;
         }
         catch (error) {
-            await session.abortTransaction();
+            yield session.abortTransaction();
             throw error;
         }
         finally {
@@ -214,34 +223,34 @@ const updateOrderStatus = async (orderId, status) => {
         }
     }
     // For other status updates
-    const result = await order_model_1.MOrderModel.findOneAndUpdate({ orderId }, { status }, {
+    const result = yield order_model_1.MOrderModel.findOneAndUpdate({ orderId }, { status }, {
         new: true,
         runValidators: true,
     });
     return result;
-};
+});
 /**
  * Updates the payment status of an order
  * @param orderId - Unique identifier of the order
  * @param paymentStatus - New payment status to be set
  * @returns Updated order document
  */
-const updatePaymentStatus = async (orderId, paymentStatus) => {
-    const result = await order_model_1.MOrderModel.findOneAndUpdate({ orderId }, { paymentStatus }, {
+const updatePaymentStatus = (orderId, paymentStatus) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield order_model_1.MOrderModel.findOneAndUpdate({ orderId }, { paymentStatus }, {
         new: true,
         runValidators: true,
     });
     return result;
-};
+});
 /**
  * Deletes an order from the system
  * @param orderId - Unique identifier of the order to be deleted
  * @returns Deleted order document
  */
-const deleteOrder = async (orderId) => {
-    const result = await order_model_1.MOrderModel.findOneAndDelete({ orderId });
+const deleteOrder = (orderId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield order_model_1.MOrderModel.findOneAndDelete({ orderId });
     return result;
-};
+});
 exports.OrderService = {
     createOrder,
     getAllOrders,

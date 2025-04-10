@@ -1,10 +1,19 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TableController = void 0;
 const table_services_1 = require("./table.services");
-const createTable = async (req, res) => {
+const createTable = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = await table_services_1.TableService.createTable(req.body);
+        const result = yield table_services_1.TableService.createTable(req.body);
         res.status(201).json({
             success: true,
             message: 'Table created successfully',
@@ -18,15 +27,15 @@ const createTable = async (req, res) => {
             data: error,
         });
     }
-};
-const getAllTables = async (req, res) => {
+});
+const getAllTables = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { page, limit, searchTerm, isOccupied } = req.query;
         const filters = {
             searchTerm: searchTerm,
             isOccupied: isOccupied ? isOccupied === 'true' : undefined,
         };
-        const result = await table_services_1.TableService.getAllTables(filters, {
+        const result = yield table_services_1.TableService.getAllTables(filters, {
             page: Number(page),
             limit: Number(limit),
         });
@@ -43,11 +52,11 @@ const getAllTables = async (req, res) => {
             data: error,
         });
     }
-};
-const getSingleTable = async (req, res) => {
+});
+const getSingleTable = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const result = await table_services_1.TableService.getSingleTable(id);
+        const result = yield table_services_1.TableService.getSingleTable(id);
         res.status(200).json({
             success: true,
             message: 'Table retrieved successfully',
@@ -61,11 +70,11 @@ const getSingleTable = async (req, res) => {
             data: error,
         });
     }
-};
-const updateTable = async (req, res) => {
+});
+const updateTable = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const result = await table_services_1.TableService.updateTable(id, req.body);
+        const result = yield table_services_1.TableService.updateTable(id, req.body);
         res.status(200).json({
             success: true,
             message: 'Table updated successfully',
@@ -79,11 +88,11 @@ const updateTable = async (req, res) => {
             data: error,
         });
     }
-};
-const deleteTable = async (req, res) => {
+});
+const deleteTable = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const result = await table_services_1.TableService.deleteTable(id);
+        const result = yield table_services_1.TableService.deleteTable(id);
         res.status(200).json({
             success: true,
             message: 'Table deleted successfully',
@@ -97,7 +106,7 @@ const deleteTable = async (req, res) => {
             data: error,
         });
     }
-};
+});
 exports.TableController = {
     createTable,
     getAllTables,

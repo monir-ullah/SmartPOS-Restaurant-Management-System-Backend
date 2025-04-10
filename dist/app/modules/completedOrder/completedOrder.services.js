@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __rest = (this && this.__rest) || function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -18,15 +27,15 @@ const notFoundError_1 = require("../../errors/notFoundError");
 /**
  * Moves a completed order from the order collection to completed orders
  */
-const moveToCompletedOrders = async (order, session) => {
+const moveToCompletedOrders = (order, session) => __awaiter(void 0, void 0, void 0, function* () {
     // Pass the order as an array when using session
-    const result = await completedOrder_model_1.MCompletedOrder.create([order], { session });
+    const result = yield completedOrder_model_1.MCompletedOrder.create([order], { session });
     return result[0]; // Return the first (and only) created document
-};
+});
 /**
  * Retrieves completed orders with filtering and pagination
  */
-const getCompletedOrders = async (filters, paginationOptions) => {
+const getCompletedOrders = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
     const { searchTerm, tableId, paymentStatus, orderType, startDate, endDate } = filters, filterData = __rest(filters, ["searchTerm", "tableId", "paymentStatus", "orderType", "startDate", "endDate"]);
     const { page = 1, limit = 10 } = paginationOptions;
     const skip = (page - 1) * limit;
@@ -66,14 +75,14 @@ const getCompletedOrders = async (filters, paginationOptions) => {
     }
     // Execute query with conditions
     const whereConditions = conditions.length > 0 ? { $and: conditions } : {};
-    const result = await completedOrder_model_1.MCompletedOrder.find(whereConditions)
+    const result = yield completedOrder_model_1.MCompletedOrder.find(whereConditions)
         .skip(skip)
         .limit(limit)
         .lean();
     if (result.length === 0) {
         throw new notFoundError_1.NotFoundError('Completed orders not found');
     }
-    const total = await completedOrder_model_1.MCompletedOrder.countDocuments(whereConditions);
+    const total = yield completedOrder_model_1.MCompletedOrder.countDocuments(whereConditions);
     return {
         meta: {
             page,
@@ -83,13 +92,13 @@ const getCompletedOrders = async (filters, paginationOptions) => {
         },
         data: result,
     };
-};
+});
 /**
  * Calculates income report for a specific date range
  */
-const getIncomeReport = async (startDate, endDate) => {
+const getIncomeReport = (startDate, endDate) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    const result = await completedOrder_model_1.MCompletedOrder.aggregate([
+    const result = yield completedOrder_model_1.MCompletedOrder.aggregate([
         {
             $match: {
                 completedAt: {
@@ -147,31 +156,31 @@ const getIncomeReport = async (startDate, endDate) => {
         averageOrderValue: 0,
     };
     return Object.assign(Object.assign({}, summary), { orders: ((_b = result[0]) === null || _b === void 0 ? void 0 : _b.orders) || [], period: { start: startDate, end: endDate } });
-};
+});
 /**
  * Gets daily income report
  */
-const getDailyIncome = async (date = new Date()) => {
+const getDailyIncome = (date = new Date()) => __awaiter(void 0, void 0, void 0, function* () {
     return getIncomeReport((0, date_fns_1.startOfDay)(date), (0, date_fns_1.endOfDay)(date));
-};
+});
 /**
  * Gets weekly income report
  */
-const getWeeklyIncome = async (date = new Date()) => {
+const getWeeklyIncome = (date = new Date()) => __awaiter(void 0, void 0, void 0, function* () {
     return getIncomeReport((0, date_fns_1.startOfWeek)(date), (0, date_fns_1.endOfWeek)(date));
-};
+});
 /**
  * Gets monthly income report
  */
-const getMonthlyIncome = async (date = new Date()) => {
+const getMonthlyIncome = (date = new Date()) => __awaiter(void 0, void 0, void 0, function* () {
     return getIncomeReport((0, date_fns_1.startOfMonth)(date), (0, date_fns_1.endOfMonth)(date));
-};
+});
 /**
  * Gets yearly income report
  */
-const getYearlyIncome = async (date = new Date()) => {
+const getYearlyIncome = (date = new Date()) => __awaiter(void 0, void 0, void 0, function* () {
     return getIncomeReport((0, date_fns_1.startOfYear)(date), (0, date_fns_1.endOfYear)(date));
-};
+});
 exports.CompletedOrderService = {
     moveToCompletedOrders,
     getCompletedOrders,

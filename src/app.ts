@@ -14,39 +14,36 @@ app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// // Handling cors issue
-// app.use(
-//   cors({
-//     origin: 'https://fullstack-client-side.vercel.app',
-//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//     credentials: true,
-//     optionsSuccessStatus: 204,
-//   }),
-// )
-
-// Handling cors issue
+// CORS configuration
 app.use(
   cors({
     origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
-    optionsSuccessStatus: 204,
   })
 )
+
+// Health check route
+app.get('/', (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: 'SmartPOS: Restaurant Management System Backend Server is running',
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString(),
+  })
+})
 
 //app route
 app.use('/', mainRoutes)
 
-app.get('/', (req: Request, res: Response) => {
-  res.json('SmartPOS: Restaurant Management System Backend Server is running')
-})
-
 // global error handler
 app.use(globalErrorHandler)
 
-//The 404 Route (ALWAYS Keep this as the last route)
-app.get('*', function (req, res) {
-  res.json('Not found route')
+// 404 Route
+app.use('*', (req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route not found',
+  })
 })
 
 export default app

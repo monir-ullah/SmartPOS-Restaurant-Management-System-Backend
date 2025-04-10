@@ -1,6 +1,15 @@
 "use strict";
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __rest = (this && this.__rest) || function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -22,15 +31,15 @@ const incorrectUsernamePassword_1 = require("../../errors/incorrectUsernamePassw
 const user_interface_1 = require("./user.interface");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // This is for user Registration
-const userRegistrationIntoDB = async (userRegistrationBody) => {
-    const userRegistrationIntoDB = await user_interface_1.MUser.create(userRegistrationBody);
+const userRegistrationIntoDB = (userRegistrationBody) => __awaiter(void 0, void 0, void 0, function* () {
+    const userRegistrationIntoDB = yield user_interface_1.MUser.create(userRegistrationBody);
     const _a = userRegistrationIntoDB.toObject(), { password } = _a, restUserFromDB = __rest(_a, ["password"]);
     return restUserFromDB;
-};
+});
 // This is for user login
-const loginUserFromDB = async (userRegistrationBody) => {
+const loginUserFromDB = (userRegistrationBody) => __awaiter(void 0, void 0, void 0, function* () {
     const { username: usernameForDB, password } = userRegistrationBody;
-    const userRegistrationIntoDB = await user_interface_1.MUser.findOne({
+    const userRegistrationIntoDB = yield user_interface_1.MUser.findOne({
         username: usernameForDB,
         password: password,
     });
@@ -44,6 +53,6 @@ const loginUserFromDB = async (userRegistrationBody) => {
         expiresIn: '1h',
     });
     return jwtToken;
-};
+});
 // exporting function so that other file can use.
 exports.UserServices = { userRegistrationIntoDB, loginUserFromDB };

@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -9,18 +18,18 @@ const catchAsyncFunc_1 = require("../../utilities/catchAsyncFunc");
 const sendResponse_1 = __importDefault(require("../../utilities/sendResponse"));
 const food_services_1 = require("./food.services");
 // Create food item function
-const createFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) => {
+const createFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const foodItemData = req.body;
-    const result = await food_services_1.FoodItemServices.createFoodItemIntoDB(foodItemData);
+    const result = yield food_services_1.FoodItemServices.createFoodItemIntoDB(foodItemData);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.CREATED,
         message: 'Food item created successfully',
         data: result,
     });
-});
+}));
 // Get all food items function
-const getAllFoodItems = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) => {
+const getAllFoodItems = (0, catchAsyncFunc_1.catchAsyncFunc)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { page, limit, searchTerm, category, minPrice, maxPrice, isAvailable } = req.query;
     const filters = {
         searchTerm: searchTerm,
@@ -29,7 +38,7 @@ const getAllFoodItems = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) =>
         maxPrice: maxPrice ? Number(maxPrice) : undefined,
         isAvailable: isAvailable ? isAvailable === 'true' : undefined,
     };
-    const result = await food_services_1.FoodItemServices.getAllFoodItemsFromDB(filters, {
+    const result = yield food_services_1.FoodItemServices.getAllFoodItemsFromDB(filters, {
         page: Number(page),
         limit: Number(limit),
     });
@@ -48,11 +57,11 @@ const getAllFoodItems = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) =>
         data: result.data,
         meta: result.meta,
     });
-});
+}));
 // Get single food item function
-const getSingleFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) => {
+const getSingleFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = await food_services_1.FoodItemServices.getSingleFoodItemFromDB(id);
+    const result = yield food_services_1.FoodItemServices.getSingleFoodItemFromDB(id);
     if (!result) {
         return (0, sendResponse_1.default)(res, {
             success: false,
@@ -67,12 +76,12 @@ const getSingleFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) 
         message: 'Food item retrieved successfully',
         data: result,
     });
-});
+}));
 // Update food item function
-const updateFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) => {
+const updateFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const updateData = req.body;
-    const result = await food_services_1.FoodItemServices.updateFoodItemInDB(id, updateData);
+    const result = yield food_services_1.FoodItemServices.updateFoodItemInDB(id, updateData);
     if (!result) {
         return (0, sendResponse_1.default)(res, {
             success: false,
@@ -87,11 +96,11 @@ const updateFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) => 
         message: 'Food item updated successfully',
         data: result,
     });
-});
+}));
 // Delete food item function
-const deleteFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) => {
+const deleteFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = await food_services_1.FoodItemServices.deleteFoodItemFromDB(id);
+    const result = yield food_services_1.FoodItemServices.deleteFoodItemFromDB(id);
     if (!result) {
         return (0, sendResponse_1.default)(res, {
             success: false,
@@ -106,7 +115,7 @@ const deleteFoodItem = (0, catchAsyncFunc_1.catchAsyncFunc)(async (req, res) => 
         message: 'Food item deleted successfully',
         data: result,
     });
-});
+}));
 // exporting functions
 exports.FoodItemController = {
     createFoodItem,
