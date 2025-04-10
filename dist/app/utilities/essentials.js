@@ -17,7 +17,7 @@ exports.dateObject = {
     month: 'date',
     range: 'date',
 };
-const generateId = ({ model, prefix, fieldName, }) => __awaiter(void 0, void 0, void 0, function* () {
+const generateId = (_a) => __awaiter(void 0, [_a], void 0, function* ({ model, prefix, fieldName, }) {
     const lastDocument = yield model
         .findOne({}, { [fieldName]: 1 })
         .sort({ [fieldName]: -1 })

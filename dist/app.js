@@ -17,7 +17,7 @@ app.use(body_parser_1.default.json());
 // CORS configuration
 app.use((0, cors_1.default)({
     origin: '*',
-    credentials: true
+    credentials: true,
 }));
 // Health check route
 app.get('/', (req, res) => {
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
         success: true,
         message: 'SmartPOS: Restaurant Management System Backend Server is running',
         environment: process.env.NODE_ENV,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
     });
 });
 //app route
@@ -36,7 +36,7 @@ app.use(globalErrorHandler_1.default);
 app.use('*', (req, res) => {
     res.status(404).json({
         success: false,
-        message: 'Route not found'
+        message: 'Route not found',
     });
 });
 exports.default = app;

@@ -160,25 +160,25 @@ const getIncomeReport = (startDate, endDate) => __awaiter(void 0, void 0, void 0
 /**
  * Gets daily income report
  */
-const getDailyIncome = (date = new Date()) => __awaiter(void 0, void 0, void 0, function* () {
+const getDailyIncome = (...args_1) => __awaiter(void 0, [...args_1], void 0, function* (date = new Date()) {
     return getIncomeReport((0, date_fns_1.startOfDay)(date), (0, date_fns_1.endOfDay)(date));
 });
 /**
  * Gets weekly income report
  */
-const getWeeklyIncome = (date = new Date()) => __awaiter(void 0, void 0, void 0, function* () {
+const getWeeklyIncome = (...args_1) => __awaiter(void 0, [...args_1], void 0, function* (date = new Date()) {
     return getIncomeReport((0, date_fns_1.startOfWeek)(date), (0, date_fns_1.endOfWeek)(date));
 });
 /**
  * Gets monthly income report
  */
-const getMonthlyIncome = (date = new Date()) => __awaiter(void 0, void 0, void 0, function* () {
+const getMonthlyIncome = (...args_1) => __awaiter(void 0, [...args_1], void 0, function* (date = new Date()) {
     return getIncomeReport((0, date_fns_1.startOfMonth)(date), (0, date_fns_1.endOfMonth)(date));
 });
 /**
  * Gets yearly income report
  */
-const getYearlyIncome = (date = new Date()) => __awaiter(void 0, void 0, void 0, function* () {
+const getYearlyIncome = (...args_1) => __awaiter(void 0, [...args_1], void 0, function* (date = new Date()) {
     return getIncomeReport((0, date_fns_1.startOfYear)(date), (0, date_fns_1.endOfYear)(date));
 });
 exports.CompletedOrderService = {
