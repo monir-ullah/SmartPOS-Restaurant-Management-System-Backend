@@ -25,7 +25,7 @@ const getAllTables = async (req: Request, res: Response) => {
 
     const filters = {
       searchTerm: searchTerm as string,
-      isOccupied: isOccupied ? isOccupied === 'true' : undefined,
+      isOccupied: isOccupied ? isOccupied : !isOccupied,
     }
 
     const result = await TableService.getAllTables(filters, {

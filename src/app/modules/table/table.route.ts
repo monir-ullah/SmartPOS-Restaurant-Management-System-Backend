@@ -16,13 +16,13 @@ router.post(
 
 router.get(
   '/get-all-tables',
-  auth(
-    USER_ROLE.ADMIN,
-    USER_ROLE.MANAGER,
-    USER_ROLE.CHEF,
-    USER_ROLE.WAITER,
-    USER_ROLE.CASHIER
-  ),
+  // auth(
+  //   USER_ROLE.ADMIN,
+  //   USER_ROLE.MANAGER,
+  //   USER_ROLE.CHEF,
+  //   USER_ROLE.WAITER,
+  //   USER_ROLE.CASHIER
+  // ),
   TableController.getAllTables
 )
 
