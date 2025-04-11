@@ -17,9 +17,9 @@ const getAllTables = async (
   filters: TTableFilters,
   paginationOptions: TPaginationOptions
 ) => {
-  const { searchTerm, ...filterData } = filters
-  const { page = 1, limit = 10 } = paginationOptions
-  const skip = (page - 1) * limit
+  const { searchTerm, ...filterData } = filters || {}  // Add default empty object
+  const { page = 1, limit = 10 } = paginationOptions || {} // Add default empty object
+  const skip = (Number(page) - 1) * Number(limit)  // Convert to numbers
   const conditions = []
 
   if (searchTerm) {
@@ -42,17 +42,17 @@ const getAllTables = async (
   const whereConditions = conditions.length > 0 ? { $and: conditions } : {}
   const result = await MTableModel.find(whereConditions)
     .skip(skip)
-    .limit(limit)
+    .limit(Number(limit))  // Convert limit to number
     .lean()
 
   const total = await MTableModel.countDocuments(whereConditions)
 
   return {
     meta: {
-      page,
-      limit,
+      page: Number(page),  // Convert to number
+      limit: Number(limit),  // Convert to number
       total,
-      totalPages: Math.ceil(total / limit),
+      totalPages: Math.ceil(total / Number(limit))  // Convert limit to number
     },
     data: result,
   }
