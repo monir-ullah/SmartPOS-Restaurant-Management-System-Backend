@@ -4,7 +4,7 @@ export type TTable = {
   tableId: string
   tableNumber: number
   seatCapacity: number
-  isOccupied: boolean
+  isAvailable: boolean
   status: TTableStatus
   createdAt: Date
   updatedAt: Date

@@ -21,11 +21,11 @@ const createTable = async (req: Request, res: Response) => {
 
 const getAllTables = async (req: Request, res: Response) => {
   try {
-    const { page, limit, searchTerm, isOccupied } = req.query
+    const { page, limit, searchTerm, isAvailable = true } = req.query
 
     const filters = {
       searchTerm: searchTerm as string,
-      isOccupied: isOccupied ? isOccupied : !isOccupied,
+      isAvailable: isAvailable as boolean,
     }
 
     const result = await TableService.getAllTables(filters, {
@@ -85,8 +85,8 @@ const updateTable = async (req: Request, res: Response) => {
 
 const deleteTable = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params
-    const result = await TableService.deleteTable(id)
+    const { tableId } = req.params
+    const result = await TableService.deleteTable(tableId)
     res.status(200).json({
       success: true,
       message: 'Table deleted successfully',

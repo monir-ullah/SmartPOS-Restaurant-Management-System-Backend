@@ -72,10 +72,13 @@ const updateTable = async (tableId: string, payload: Partial<TTable>) => {
 }
 
 const deleteTable = async (tableId: string) => {
-  const result = await MTableModel.findOneAndUpdate({
-    tableId,
-    isOccupied: false,
-  })
+  const result = await MTableModel.findOneAndUpdate(
+    { tableId },
+    { 
+      isAvailable: false,
+    },
+    { new: true }
+  )
   return result
 }
 

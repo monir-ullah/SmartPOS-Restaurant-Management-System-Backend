@@ -17,9 +17,9 @@ const tableSchema = new Schema<TTable>(
       type: Number,
       required: true,
     },
-    isOccupied: {
+    isAvailable: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     status: {
       type: String,

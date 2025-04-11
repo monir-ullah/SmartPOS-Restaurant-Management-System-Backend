@@ -15,7 +15,7 @@ const createTableValidationSchema = z.object({
 const updateTableValidationSchema = z.object({
   tableNumber: z.number().optional(),
   seatCapacity: z.number().optional(),
-  isOccupied: z.boolean().optional(),
+  isAvailable: z.boolean().optional(),
   status: z
     .enum(['available', 'occupied', 'reserved', 'maintenance'])
     .optional(),

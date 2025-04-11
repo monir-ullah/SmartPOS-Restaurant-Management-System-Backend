@@ -52,7 +52,7 @@ router.patch(
 )
 
 router.delete(
-  '/delete-table/:id',
+  '/delete-table/:tableId',
   auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
   TableController.deleteTable
 )
