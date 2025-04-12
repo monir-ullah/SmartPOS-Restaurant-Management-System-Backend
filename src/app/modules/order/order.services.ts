@@ -182,7 +182,20 @@ const getAllOrders = async (
  * @returns Order document with populated food items
  */
 const getSingleOrder = async (orderId: string) => {
-  const result = await MOrderModel.findOne({ orderId }).populate('items.foodId')
+  const result = await MOrderModel.findOne({ orderId }).populate({
+    path: 'items.foodId',
+    localField: 'items.foodId',
+    foreignField: 'foodId',
+    select: 'foodId name price description imageUrl isAvailable',
+  })
+  .populate({
+    path: 'tableId',
+    model: MTableModel,
+    localField: 'tableId',
+    foreignField: 'tableId',
+    select: '-_id tableId tableNumber capacity isReserved isOccupied'
+  })
+  .lean()
   return result
 }
 

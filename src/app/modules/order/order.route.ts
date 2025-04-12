@@ -29,7 +29,7 @@ router.get(
 )
 
 router.get(
-  '/:orderId',
+  '/get-signle-order/:orderId',
   auth(
     USER_ROLE.ADMIN,
     USER_ROLE.MANAGER,
@@ -61,7 +61,7 @@ router.patch(
 )
 
 router.delete(
-  '/:orderId',
+  '/delete-signle-order/:orderId',
   auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
   OrderController.deleteOrder
 )
