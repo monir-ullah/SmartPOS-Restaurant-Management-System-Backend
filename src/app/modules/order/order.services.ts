@@ -151,6 +151,13 @@ const getAllOrders = async (
       foreignField: 'foodId',
       select: 'foodId name price description imageUrl isAvailable'
     })
+    .populate({
+      path: 'tableId',
+      model: MTableModel,
+      localField: 'tableId',
+      foreignField: 'tableId',
+      select: '-_id tableId tableNumber capacity isReserved isOccupied'
+    })
     .skip(skip)
     .limit(limit)
     .lean()
