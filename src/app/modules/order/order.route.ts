@@ -11,7 +11,7 @@ const router = express.Router()
 
 router.post(
   '/create-order',
-  auth(USER_ROLE.WAITER, USER_ROLE.CHEF),
+  auth(USER_ROLE.WAITER, USER_ROLE.CHEF, USER_ROLE.CASHIER, USER_ROLE.ADMIN, USER_ROLE.MANAGER),
   validateZodRequest(OrderValidation.createOrderZodSchema),
   OrderController.createOrder
 )
