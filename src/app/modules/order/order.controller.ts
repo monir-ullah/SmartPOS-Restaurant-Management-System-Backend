@@ -18,9 +18,10 @@ const createOrder = catchAsyncFunc(async (req: Request, res: Response) => {
 const getAllOrders = catchAsyncFunc(async (req: Request, res: Response) => {
   const filters = req.query
   const paginationOptions = {
-    page: Number(req.query.page),
-    limit: Number(req.query.limit),
+    page: Number(req.query.page ? req.query.page : 1),
+    limit: Number(req.query.limit ? req.query.limit : 10),
   }
+ 
 
   const result = await OrderService.getAllOrders(filters, paginationOptions)
 

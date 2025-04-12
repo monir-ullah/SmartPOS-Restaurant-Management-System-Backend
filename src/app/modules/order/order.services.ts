@@ -103,7 +103,7 @@ const getAllOrders = async (
   const { page = 1, limit = 10 } = paginationOptions
   const skip = (page - 1) * limit
   const conditions = []
-
+ 
   // Build search conditions
   if (searchTerm) {
     conditions.push({
@@ -141,12 +141,21 @@ const getAllOrders = async (
 
   // Execute query with conditions
   const whereConditions = conditions.length > 0 ? { $and: conditions } : {}
+
+ 
+
   const result = await MOrderModel.find(whereConditions)
-    .populate('items.foodId')
+    .populate({
+      path: 'items.foodId',
+      localField: 'items.foodId',
+      foreignField: 'foodId',
+      select: 'foodId name price description imageUrl isAvailable'
+    })
     .skip(skip)
     .limit(limit)
     .lean()
 
+    
   const total = await MOrderModel.countDocuments(whereConditions)
 
   return {
