@@ -20,14 +20,14 @@ router.get('/get-all-food-items', FoodItemController.getAllFoodItems)
 router.get('/get-single-food-item/:id', FoodItemController.getSingleFoodItem)
 
 router.patch(
-  '/update-single-fodd-item/:id',
+  '/update-single-food-item/:foodId',
   auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
   validateZodRequest(FoodItemValidation.updateFoodItemValidationSchema),
   FoodItemController.updateFoodItem
 )
 
 router.delete(
-  '/delete-single-food-itme/:id',
+  '/delete-single-food-item/:id',
   auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
   FoodItemController.deleteFoodItem
 )

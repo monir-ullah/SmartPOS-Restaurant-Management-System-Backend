@@ -87,36 +87,58 @@ const getAllFoodItemsFromDB = async (
 }
 
 // Get single food item
-const getSingleFoodItemFromDB = async (id: string) => {
-  const result = await MFoodItem.findById(id).populate('category').lean()
+const getSingleFoodItemFromDB = async (foodId: string) => {
+  const result = await MFoodItem.findOne({foodId}).populate({
+    path: 'categoryId',
+    select: '-_id categoryId name description isActive',
+    foreignField: 'categoryId',
+    localField: 'categoryId'
+  }).lean()
   return result
 }
 
 // Update food item
-const updateFoodItemInDB = async (id: string, payload: Partial<TFoodItem>) => {
-  // First Check if the category exists
-  const isCategoryExists = await MCategory.findOne({
-    categoryId: payload.categoryId,
-    isActive: true,
-  })
-
-  if (!isCategoryExists) {
-    throw new NotFoundError(
-      'Category not found. For that reason you cannot create food item.Please create a category first and try again.'
-    )
+const updateFoodItemInDB = async (id: string, payload: { data: Partial<TFoodItem> }) => {
+  
+  // First check if the food item exists
+  const existingFood = await MFoodItem.findOne({ foodId: id })
+  
+  if (!existingFood) {
+    throw new NotFoundError('Food item not found')
   }
 
-  const result = await MFoodItem.findOneAndUpdate({ foodId: id }, payload, {
-    new: true,
-    runValidators: true,
-  })
-    .populate({
-      path: 'categoryId',
-      localField: 'categoryId',
-      foreignField: 'categoryId',
-      select: 'categoryId name description isActive',
+  // Only check category if it's being updated
+  if (payload.data?.categoryId) {
+    const isCategoryExists = await MCategory.findOne({
+      categoryId: payload.data.categoryId,
+      isActive: true,
     })
-    .lean()
+
+    if (!isCategoryExists) {
+      throw new NotFoundError(
+        'Category not found. For that reason you cannot update food item. Please use a valid category.'
+      )
+    }
+  }
+
+  const result = await MFoodItem.findOneAndUpdate(
+    { foodId: id }, 
+    { ...existingFood.toObject(), ...payload.data },  // Merge existing data with updates
+    {
+      new: true,
+      runValidators: true,
+    }
+  ).populate({
+    path: 'categoryId',
+    localField: 'categoryId',
+    foreignField: 'categoryId',
+    select: 'categoryId name description isActive',
+  }).lean()
+
+  if (!result) {
+    throw new NotFoundError('Failed to update food item')
+  }
+
   return result
 }
 

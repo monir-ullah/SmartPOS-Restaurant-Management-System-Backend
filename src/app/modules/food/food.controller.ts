@@ -76,9 +76,10 @@ const getSingleFoodItem = catchAsyncFunc(async (req, res) => {
 
 // Update food item function
 const updateFoodItem = catchAsyncFunc(async (req, res) => {
-  const { id } = req.params
+  const { foodId } = req.params
+  console.log(foodId)
   const updateData = req.body
-  const result = await FoodItemServices.updateFoodItemInDB(id, updateData)
+  const result = await FoodItemServices.updateFoodItemInDB(foodId, updateData)
 
   if (!result) {
     return sendResponse(res, {
