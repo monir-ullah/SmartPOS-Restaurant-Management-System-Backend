@@ -6,7 +6,7 @@ import {
 } from './food.interface'
 import { MFoodItem } from './food.model'
 import { generateId } from '../../utilities/essentials'
-import { NotFoundError } from '../../errors/notFoundError'
+import { NotFoundError } from '../../errors/notFoundError'  // Import the model instead of interface
 import { MCategory } from '../category/category.interface'
 
 // Create food item
@@ -39,9 +39,8 @@ const getAllFoodItemsFromDB = async (
   filters: TFoodItemFilters,
   paginationOptions: TPaginationOptions
 ) => {
-  const { searchTerm, categoryId, minPrice, maxPrice, isAvailable } = filters
-  const { page = 1, limit = 10 } = paginationOptions
-
+  const { searchTerm, categoryId, minPrice, maxPrice, isAvailable } = filters 
+  const { page = 1, limit = 10 } = paginationOptions 
   const skip = (page - 1) * limit
   const query: Record<string, any> = {}
 
@@ -63,16 +62,25 @@ const getAllFoodItemsFromDB = async (
     query.isAvailable = isAvailable
   }
 
-  const result = await MFoodItem.find(query).skip(skip).limit(limit).lean()
+  const result = await MFoodItem.find(query)
+    .skip(skip)
+    .limit(limit)
+    .populate({
+      path: 'categoryId',
+      select: '-_id categoryId name description isActive',
+      foreignField: 'categoryId',
+      localField: 'categoryId'
+    })
+    .lean()
 
   const total = await MFoodItem.countDocuments(query)
 
   return {
     meta: {
-      page: page ? page : 1,
-      limit: limit ? limit : 10,
+      page: Number(page),
+      limit: Number(limit),
       total,
-      totalPages: page && limit ? Math.ceil(total / limit) : 1,
+      totalPages: Math.ceil(total / limit),
     },
     data: result,
   }
