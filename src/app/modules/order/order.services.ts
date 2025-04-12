@@ -265,7 +265,7 @@ const updateOrderStatus = async (orderId: string, status: TOrder['status']) => {
         items: fullOrder.items,
         totalAmount: fullOrder.totalAmount,
         status: 'completed',
-        paymentStatus: fullOrder.paymentStatus || 'paid',
+        paymentStatus: 'paid',
         orderType: fullOrder.orderType || 'dine-in',
         completedAt: new Date(),
       }
