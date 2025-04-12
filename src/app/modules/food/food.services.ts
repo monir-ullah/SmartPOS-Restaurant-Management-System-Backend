@@ -39,7 +39,7 @@ const getAllFoodItemsFromDB = async (
   filters: TFoodItemFilters,
   paginationOptions: TPaginationOptions
 ) => {
-  const { searchTerm, categoryId, minPrice, maxPrice, isAvailable } = filters 
+  const { searchTerm, categoryId, minPrice, maxPrice, isAvailable = true } = filters 
   const { page = 1, limit = 10 } = paginationOptions 
   const skip = (page - 1) * limit
   const query: Record<string, any> = {}
@@ -121,13 +121,28 @@ const updateFoodItemInDB = async (id: string, payload: Partial<TFoodItem>) => {
 }
 
 // Delete food item
-const deleteFoodItemFromDB = async (id: string) => {
-  const result = await MFoodItem.findOneAndUpdate({
-    foodId: id,
-    isActive: false,
-  })
-    .populate('category')
-    .lean()
+const deleteFoodItemFromDB = async (foodId: string) => {
+  // First check if the food item exists
+  const existingFood = await MFoodItem.findOne({ foodId })
+  
+  if (!existingFood) {
+    throw new NotFoundError('Food item not found')
+  }
+
+  const result = await MFoodItem.findOneAndUpdate(
+    { foodId },
+    { isAvailable: false },
+    { 
+      new: true,
+      runValidators: true 
+    }
+  ).populate({
+    path: 'categoryId',
+    select: 'categoryId name description isActive',
+    foreignField: 'categoryId',
+    localField: 'categoryId'
+  }).lean()
+
   return result
 }
 
