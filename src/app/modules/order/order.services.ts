@@ -291,7 +291,7 @@ const updateOrderStatus = async (orderId: string, status: TOrder['status']) => {
   // For other status updates
   const result = await MOrderModel.findOneAndUpdate(
     { orderId },
-    { status, paymentStatus: 'paid' },
+    { status },
     {
       new: true,
       runValidators: true,
