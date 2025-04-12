@@ -23,7 +23,7 @@ const updateOrderStatusZodSchema = z.object({
     'served',
     'pay',
     'completed',
-    'cancelled',
+    'canceled',
   ]),
 })
 

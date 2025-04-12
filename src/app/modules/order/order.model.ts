@@ -78,7 +78,7 @@ const orderSchema = new Schema<TOrder>(
         'served',
         'completed',
         'pay',
-        'cancelled',
+        'canceled',
       ],
       default: 'pending',
     },

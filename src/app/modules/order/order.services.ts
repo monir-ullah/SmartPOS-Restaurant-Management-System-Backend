@@ -103,7 +103,17 @@ const getAllOrders = async (
   const { page = 1, limit = 10 } = paginationOptions
   const skip = (page - 1) * limit
   const conditions = []
- 
+
+  // Default conditions to exclude paid orders and cancelled orders
+  if (!paymentStatus) {
+    conditions.push({ paymentStatus: 'unpaid' });
+  }
+
+  if (!status) {
+    conditions.push({ status: { $ne: 'cancelled' } });
+  }
+  
+  
   // Build search conditions
   if (searchTerm) {
     conditions.push({
@@ -213,13 +223,13 @@ const updateOrderStatus = async (orderId: string, status: TOrder['status']) => {
   }
 
   const statusFlow = {
-    pending: ['cooking', 'cancelled'],
-    cooking: ['ready', 'cancelled'],
-    ready: ['served', 'cancelled'],
-    served: ['pay', 'completed'],
+    pending: ['cooking', 'canceled'],
+    cooking: ['ready', 'canceled'],
+    ready: ['served', 'canceled'],
+    served: ['pay', 'canceled'],
     pay: ['completed'],
     completed: [],
-    cancelled: [],
+    canceled: [],
   }
 
   // Check if the status transition is allowed
@@ -281,7 +291,7 @@ const updateOrderStatus = async (orderId: string, status: TOrder['status']) => {
   // For other status updates
   const result = await MOrderModel.findOneAndUpdate(
     { orderId },
-    { status },
+    { status, paymentStatus: 'paid' },
     {
       new: true,
       runValidators: true,

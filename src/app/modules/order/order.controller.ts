@@ -16,14 +16,22 @@ const createOrder = catchAsyncFunc(async (req: Request, res: Response) => {
 })
 
 const getAllOrders = catchAsyncFunc(async (req: Request, res: Response) => {
-  const filters = req.query
+  // const filters = req.query
   const paginationOptions = {
     page: Number(req.query.page ? req.query.page : 1),
     limit: Number(req.query.limit ? req.query.limit : 10),
   }
  
+  const { page, limit, searchTerm } = req.query
 
-  const result = await OrderService.getAllOrders(filters, paginationOptions)
+  const filters = {
+    searchTerm: searchTerm as string,
+  }
+
+  const result = await OrderService.getAllOrders(filters, {
+    page: Number(page),
+    limit: Number(limit),
+  })
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

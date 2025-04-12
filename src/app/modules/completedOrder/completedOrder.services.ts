@@ -27,6 +27,7 @@ const moveToCompletedOrders = async (
   session: ClientSession
 ) => {
   // Pass the order as an array when using session
+  
   const result = await MCompletedOrder.create([order], { session })
   return result[0] // Return the first (and only) created document
 }

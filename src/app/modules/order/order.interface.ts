@@ -21,7 +21,7 @@ export type TOrder = {
     | 'served'
     | 'pay'
     | 'completed'
-    | 'cancelled'
+    | 'canceled'
   paymentStatus: 'unpaid' | 'paid'
   orderType: 'dine-in' | 'takeaway'
   createdAt: Date
