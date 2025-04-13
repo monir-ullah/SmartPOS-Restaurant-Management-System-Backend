@@ -4,6 +4,7 @@
  * retrieval, status updates, and deletion.
  */
 
+import { v4 as uuidv4 } from 'uuid';
 import { generateId } from '../../utilities/essentials'
 import { TPaginationOptions } from '../food/food.interface'
 import { TOrder, TOrderFilters } from './order.interface'
@@ -59,12 +60,19 @@ const createOrder = async (payload: Partial<TOrder>) => {
   }
 
   // Generate unique order ID
-  const orderId = await generateId({
-    model: MOrderModel,
-    prefix: 'order',
-    fieldName: 'orderId',
-  })
+  // const orderId = await generateId({
+  //   model: MOrderModel,
+  //   prefix: 'order',
+  //   fieldName: 'orderId',
+  // })
 
+  
+  const generateOrderId = () => {
+    const shortId = uuidv4().split('-')[0]; // get first segment for brevity
+    return `order-${shortId}`;
+  };
+
+  const orderId = generateOrderId();
   // Calculate total order amount
   const totalAmount = payload.items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -272,7 +280,8 @@ const updateOrderStatus = async (orderId: string, status: TOrder['status']) => {
 
       // Move to completed orders with session
       const result = await CompletedOrderService.moveToCompletedOrders(
-        completedOrder,
+        // @ts-ignore
+        completedOrder, 
         session
       )
 
