@@ -4,6 +4,8 @@ export const USER_ROLE = {
   CHEF: 'chef',
   CASHIER: 'cashier',
   MANAGER: 'manager',
+  OWNER: 'owner',
+  ADMINISTRATOR: 'administrator',
 } as const // as const is used to make the object readonly.
 
 // Type for user roles

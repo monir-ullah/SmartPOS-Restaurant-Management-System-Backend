@@ -45,7 +45,9 @@ router.patch(
     USER_ROLE.MANAGER,
     USER_ROLE.CHEF,
     USER_ROLE.WAITER,
-    USER_ROLE.CASHIER
+    USER_ROLE.CASHIER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
   ),
   validateZodRequest(TableValidation.updateTableValidationSchema),
   TableController.updateTable
@@ -53,7 +55,12 @@ router.patch(
 
 router.delete(
   '/delete-table/:tableId',
-  auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
+  auth(
+    USER_ROLE.ADMIN,
+    USER_ROLE.MANAGER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
+  ),
   TableController.deleteTable
 )
 

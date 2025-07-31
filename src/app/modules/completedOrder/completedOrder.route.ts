@@ -7,12 +7,22 @@ const router = express.Router()
 
 router.get(
   '/get-complete-order-report',
-  auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
+  auth(
+    USER_ROLE.ADMIN,
+    USER_ROLE.MANAGER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
+  ),
   CompletedOrderController.getCompletedOrders
 )
 router.get(
   '/get-income',
-  auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
+  auth(
+    USER_ROLE.ADMIN,
+    USER_ROLE.MANAGER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
+  ),
   CompletedOrderController.getIncome
 )
 

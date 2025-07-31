@@ -10,7 +10,12 @@ const router = express.Router()
 
 router.post(
   '/create-food',
-  auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
+  auth(
+    USER_ROLE.ADMIN,
+    USER_ROLE.MANAGER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
+  ),
   validateZodRequest(FoodItemValidation.createFoodItemValidationSchema),
   FoodItemController.createFoodItem
 )
@@ -21,14 +26,24 @@ router.get('/get-single-food-item/:id', FoodItemController.getSingleFoodItem)
 
 router.patch(
   '/update-single-food-item/:foodId',
-  auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
+  auth(
+    USER_ROLE.ADMIN,
+    USER_ROLE.MANAGER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
+  ),
   validateZodRequest(FoodItemValidation.updateFoodItemValidationSchema),
   FoodItemController.updateFoodItem
 )
 
 router.delete(
   '/delete-single-food-item/:id',
-  auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
+  auth(
+    USER_ROLE.ADMIN,
+    USER_ROLE.MANAGER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
+  ),
   FoodItemController.deleteFoodItem
 )
 

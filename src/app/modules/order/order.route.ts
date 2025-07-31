@@ -11,7 +11,15 @@ const router = express.Router()
 
 router.post(
   '/create-order',
-  auth(USER_ROLE.WAITER, USER_ROLE.CHEF, USER_ROLE.CASHIER, USER_ROLE.ADMIN, USER_ROLE.MANAGER),
+  auth(
+    USER_ROLE.WAITER,
+    USER_ROLE.CHEF,
+    USER_ROLE.CASHIER,
+    USER_ROLE.ADMIN,
+    USER_ROLE.MANAGER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
+  ),
   validateZodRequest(OrderValidation.createOrderZodSchema),
   OrderController.createOrder
 )
@@ -23,7 +31,9 @@ router.get(
     USER_ROLE.MANAGER,
     USER_ROLE.CHEF,
     USER_ROLE.WAITER,
-    USER_ROLE.CASHIER
+    USER_ROLE.CASHIER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
   ),
   OrderController.getAllOrders
 )
@@ -47,7 +57,9 @@ router.patch(
     USER_ROLE.WAITER,
     USER_ROLE.CASHIER,
     USER_ROLE.MANAGER,
-    USER_ROLE.ADMIN
+    USER_ROLE.ADMIN,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
   ),
   validateZodRequest(OrderValidation.updateOrderStatusZodSchema),
   OrderController.updateOrderStatus
@@ -55,14 +67,25 @@ router.patch(
 
 router.patch(
   '/:orderId/payment',
-  auth(USER_ROLE.CASHIER, USER_ROLE.MANAGER, USER_ROLE.ADMIN),
+  auth(
+    USER_ROLE.CASHIER,
+    USER_ROLE.MANAGER,
+    USER_ROLE.ADMIN,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
+  ),
   validateZodRequest(OrderValidation.updatePaymentStatusZodSchema),
   OrderController.updatePaymentStatus
 )
 
 router.delete(
   '/delete-signle-order/:orderId',
-  auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
+  auth(
+    USER_ROLE.ADMIN,
+    USER_ROLE.MANAGER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
+  ),
   OrderController.deleteOrder
 )
 
