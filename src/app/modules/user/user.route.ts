@@ -10,7 +10,12 @@ const router = Router()
 // Registration route
 router.post(
   '/user/registration',
-  auth(USER_ROLE.ADMIN, USER_ROLE.MANAGER),
+  auth(
+    USER_ROLE.ADMIN,
+    USER_ROLE.MANAGER,
+    USER_ROLE.OWNER,
+    USER_ROLE.ADMINISTRATOR
+  ),
   validateZodRequest(userZodSchema),
   UserController.userRegistration
 )
